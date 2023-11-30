@@ -5,10 +5,13 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { getAllByPage, getAllFavorites } from "./services/PersonagemService";
 import EpisodioPage from "./pages/EpisodioPage";
 import Episodios from "./pages/Episodios";
+import Locais from "./pages/Locais";
+import LocalPage from "./pages/LocalPage";
 
 const PersonagensStack = createStackNavigator();
 const FavoritosStack = createStackNavigator();
 const EpisodiosStack = createStackNavigator();
+const LocaisStack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
 function PersonagensComponentFactory(fetcher) {
@@ -42,12 +45,22 @@ function EpisodiosStackScreen() {
   );
 }
 
+function LocaisStackScreen() {
+  return (
+    <LocaisStack.Navigator initialRouteName="Locais">
+      <LocaisStack.Screen name="Locais" component={Locais} />
+      <LocaisStack.Screen name="Local" component={LocalPage} />
+    </LocaisStack.Navigator>
+  );
+}
+
 export default function Router() {
   return (
     <Tab.Navigator screenOptions={{ headerShown: false }} initialRouteName="Personagens">
       <Tab.Screen name="PersonagensArea" component={PersonagensStackScreen} options={{ title: "Personagens" }} />
       <Tab.Screen name="FavoritosArea" component={FavoritosStackScreen} options={{ title: "Favoritos" }} />
       <Tab.Screen name="EpisodiosArea" component={EpisodiosStackScreen} options={{ title: "Episodios" }} />
+      <Tab.Screen name="LocationsArea" component={LocaisStackScreen} options={{ title: "Locations" }} />
     </Tab.Navigator>
   );
 }
