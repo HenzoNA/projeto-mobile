@@ -1,32 +1,21 @@
-import { useState } from "react";
 import { FAB } from "react-native-paper";
 import styles from "./styles";
-import _ from "lodash";
 
-export default function FavoriteButton({ isFavorite, onPress, style, ...props }) {
-  const [ innerIsFavorite, setIsFavorite ] = useState(!!isFavorite);
-
-  const onPressWrapper = () => {
-    setIsFavorite(!innerIsFavorite);
-    
-    if (onPress) {
-      onPress(innerIsFavorite);
-    }
-  };
-
-  const icon = innerIsFavorite
+export default function FavoriteButton({ isFavorite, style, ...props }) {
+  
+  const icon = isFavorite
     ? "cards-heart"
     : "cards-heart-outline";
 
-  const color = innerIsFavorite
+  const color = isFavorite
     ? "#FFFFFF"
     : "#f24257";
 
-  const rippleColor = innerIsFavorite
+  const rippleColor = isFavorite
     ? "#f24257"
     : "#FFFFFF";
 
-  let selectedStyle = innerIsFavorite
+  let selectedStyle = isFavorite
     ? styles.active
     : styles.inactive;
 
@@ -35,6 +24,6 @@ export default function FavoriteButton({ isFavorite, onPress, style, ...props })
   }
 
   return (
-    <FAB icon={icon} color={color} rippleColor={rippleColor} style={selectedStyle} animated onPress={onPressWrapper} {...props} />
+    <FAB icon={icon} color={color} rippleColor={rippleColor} style={selectedStyle} animated {...props} />
   );
 }

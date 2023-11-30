@@ -4,16 +4,23 @@ import { Image, Text, View } from "react-native";
 import { addAsFavorite, getById, removeAsFavorite } from "../../services/PersonagemService";
 import Loading from "../../components/Loading";
 import FavoriteButton from "../../components/FavoriteButton";
+import { getByUrlList } from "../../services/EpisodeService";
+import Episodio from "../../components/Episodio";
+import { FlatList } from "react-native";
 
 export default function PersonagemPage({ navigation, route }) {
   const { id } = route?.params;
   const [isLoading, setIsLoading] = useState(true);
   const [ personagem, setPersonagem ] = useState();
+  const [ episodios, setEpisodios ] = useState();
 
   useEffect(() => {
     const exec = async () => {
       setIsLoading(true);
-      setPersonagem(await getById(id));
+      const response = await getById(id);
+      setPersonagem(response);
+      const eps = await getByUrlList(response.episode);
+      setEpisodios(eps.result)
       setIsLoading(false);
     }
 
@@ -22,12 +29,21 @@ export default function PersonagemPage({ navigation, route }) {
     return () => {};
   }, []);
 
-  function handleFavorite(isFavorite) {
+  function handleFavorite() {
+    const isFavorite = personagem.isFavorite;
+
     if (isFavorite) {
       removeAsFavorite(id);
     } else {
       addAsFavorite(id);
     }
+
+    personagem.isFavorite = !isFavorite;
+    setPersonagem({ ...personagem });
+  }
+
+  function getEpisodioOnPress(id) {
+    return () => navigation.navigate("EpisodiosArea", { screen: "Episodio", params: { id } });
   }
 
   if (isLoading || !personagem) {
@@ -50,8 +66,15 @@ export default function PersonagemPage({ navigation, route }) {
         {personagem.species} {personagem.status}
       </Text>
       <Text style={styles.episode}>
-        Apareceu no episódio {personagem.episode}
+        Apareceu no(s) episódio(s)
       </Text>
+      <FlatList 
+        data={episodios}
+        keyExtractor={episodio => episodio.id}
+        renderItem={({ item }) =>
+          <Episodio name={item.name} onPress={getEpisodioOnPress(item.id)} />
+        }
+      />
     </View>
   );
 };

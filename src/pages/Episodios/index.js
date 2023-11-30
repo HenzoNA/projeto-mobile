@@ -1,13 +1,13 @@
 import { useState, useEffect, useRef } from "react";
 import { View, FlatList } from "react-native";
-import Personagem from "../../components/Personagem";
 import styles from "./styles";
 import Loading from "../../components/Loading";
-import { addAsFavorite, removeAsFavorite } from "../../services/PersonagemService";
 import PageSelector from "../../components/PageSelector";
+import Episodio from "../../components/Episodio";
+import { getAllByPage } from "../../services/EpisodeService";
 
-export default function Personagens({ navigation, fetchPersonagens }) {
-  const [ personagens, setPersonagens ] = useState();
+export default function Episodios({ navigation }) {
+  const [ episodios, setEpisodios ] = useState();
   const [isLoading, setIsLoading] = useState(true);
   const [pagina, setPagina] = useState(1);
   const [totalPaginas, setTotalPaginas] = useState(1);
@@ -15,14 +15,14 @@ export default function Personagens({ navigation, fetchPersonagens }) {
 
   useEffect(() => {
     const exec = async () => {
-      const { result, pages } = await fetchPersonagens(pagina);
+      const { result, pages } = await getAllByPage(pagina);
 
       if (!mounted.current) {
         return;
       }
 
       setIsLoading(true);
-      setPersonagens(result);
+      setEpisodios(result);
       setTotalPaginas(pages);
       setIsLoading(false);
     }
@@ -43,26 +43,9 @@ export default function Personagens({ navigation, fetchPersonagens }) {
     };
   }, [pagina]);
 
-  const getOnPersonagemPressCallback = (id) => {
-    return () => navigation.navigate("Personagem", { id });
+  const getOnEpisodioPressCallback = (id) => {
+    return () => navigation.navigate("Episodio", { id });
   }
-
-  const getOnFavoriteCallback = (id) => {
-    return () => {
-      const personagemIndex = personagens.findIndex(({ id: personagemId }) => id == personagemId);
-
-      const newIsFavorite = !personagens[personagemIndex].isFavorite;
-
-      if (newIsFavorite) {
-        addAsFavorite(id);
-      } else {
-        removeAsFavorite(id);
-      }
-
-      personagens[personagemIndex].isFavorite = newIsFavorite;
-      setPersonagens([ ...personagens ]);
-    }
-  } 
 
   if (isLoading) {
     return <Loading />;
@@ -72,11 +55,11 @@ export default function Personagens({ navigation, fetchPersonagens }) {
     <View style={styles.container}>
       <FlatList
         style={styles.flatList}
-        data={personagens}
+        data={episodios}
         keyExtractor={(item) => item.id.toString()}
         renderItem={
           ({ item }) => 
-            <Personagem onPress={getOnPersonagemPressCallback(item.id)} onFavorite={getOnFavoriteCallback(item.id)} {...item} />
+            <Episodio name={item.name} onPress={getOnEpisodioPressCallback(item.id)} />
         }
       />
       {
