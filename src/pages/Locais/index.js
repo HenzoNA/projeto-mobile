@@ -58,8 +58,12 @@ export default function Locais({ navigation }) {
         data={locais}
         keyExtractor={(item) => item.id.toString()}
         renderItem={
-          ({ item }) => 
-            <Local onPress={getOnLocalPressCallback(item.id)} {...item} />
+          ({ item }) =>
+            <Local 
+              onPress={getOnLocalPressCallback(item.id)} 
+              name={item.name}
+              dimension={item.dimension} 
+            />
         }
       />
       {
