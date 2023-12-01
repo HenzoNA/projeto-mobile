@@ -60,7 +60,7 @@ export default function Router() {
       <Tab.Screen name="PersonagensArea" component={PersonagensStackScreen} options={{ title: "Personagens" }} />
       <Tab.Screen name="FavoritosArea" component={FavoritosStackScreen} options={{ title: "Favoritos" }} />
       <Tab.Screen name="EpisodiosArea" component={EpisodiosStackScreen} options={{ title: "Episodios" }} />
-      <Tab.Screen name="LocationsArea" component={LocaisStackScreen} options={{ title: "Locations" }} />
+      <Tab.Screen name="LocationsArea" component={LocaisStackScreen} options={{ title: "Locais" }} />
     </Tab.Navigator>
   );
 }
